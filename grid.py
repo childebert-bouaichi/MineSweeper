@@ -63,17 +63,17 @@ class Minesweeper:
 
         self.create_grid()
 
-        self.frame = Frame(self.screen)
-        self.frame.pack(pady=20)
+        self.frame = Frame(self.screen, height=80)        
+        self.frame.pack(pady=10, fill="x")
 
-        self.play_button = Button(self.frame, text=" rejouer 😃", command= self.create_grid)
-        self.play_button.pack(pady=5)
+        self.difficulty_buttondwn = Button(self.frame, text=" difficulty - ", command=self.grid_down)
+        self.difficulty_buttondwn.place(x=180, y=30, width=80)
+
+        self.play_button = Button(self.frame, text=" rejouer 😃", command=self.create_grid)
+        self.play_button.place(x=280, y=30, width=100)
 
         self.difficulty_buttonup = Button(self.frame, text=" difficulty + ", command=self.grid_up)
-        self.difficulty_buttonup.pack(pady=5)
-
-        self.difficulty_buttondwn = Button(self.frame, text=" difficulty - ", command= self.grid_down)
-        self.difficulty_buttondwn.pack(pady=5)
+        self.difficulty_buttonup.place(x=400, y=30, width=80)
 
     def create_grid(self):
         for widget in self.screen.winfo_children():
