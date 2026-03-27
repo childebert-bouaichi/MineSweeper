@@ -125,9 +125,9 @@ class Minesweeper:
         self.frame = Frame(self.screen, height=90)
         self.frame.pack(pady=10, fill="x")
 
-        self.difficulty_buttondwn = Button(self.frame, text=" difficulty - ", command=self.grid_down)
+        self.difficulty_buttondwn = Button(self.frame, text=" difficulté - ", command=self.grid_down)
         self.play_button = Button(self.frame, text=" rejouer 😃", command=self.create_grid)
-        self.difficulty_buttonup = Button(self.frame, text=" difficulty + ", command=self.grid_up)
+        self.difficulty_buttonup = Button(self.frame, text=" difficulté + ", command=self.grid_up)
 
         self.centrer_boutons()
 
@@ -142,9 +142,9 @@ class Minesweeper:
 
         centre = largeur_fenetre // 2
 
-        self.difficulty_buttondwn.place(x=centre - 210, y=25, width=100)
-        self.play_button.place(x=centre - 90, y=25, width=120)
-        self.difficulty_buttonup.place(x=centre + 50, y=25, width=100)
+        self.difficulty_buttondwn.place(x=centre - 173, y=25, width=100)
+        self.play_button.place(x=centre - 53, y=25, width=120)
+        self.difficulty_buttonup.place(x=centre + 87, y=25, width=100)
 
     def on_resize(self, event):
         self.centrer_boutons()
