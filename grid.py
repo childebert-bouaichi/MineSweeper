@@ -48,6 +48,67 @@
 # if __name__ == "__main__":
 #     jeu = Minesweeper()
 #     jeu.run()
+# import tkinter as tk
+# from tkinter import Tk, Button, Frame
+
+
+# class Minesweeper:
+#     def __init__(self):
+#         self.screen = Tk()
+#         self.screen.title("Mines Weeper 💣")
+#         self.screen.minsize(800, 850)
+
+#         self.width = 6
+#         self.height = 6
+
+#         self.frame = Frame(self.screen, height=80)        
+#         self.frame.pack(pady=10, fill="x")
+
+#         self.difficulty_buttondwn = Button(self.frame, text=" difficulty - ", command=self.grid_down)
+#         self.difficulty_buttondwn.place(x=270, y=10, width=80)
+
+#         self.play_button = Button(self.frame, text=" rejouer 😃", command=self.create_grid)
+#         self.play_button.place(x=370, y=10, width=100)
+
+#         self.difficulty_buttonup = Button(self.frame, text=" difficulty + ", command=self.grid_up)
+#         self.difficulty_buttonup.place(x=490, y=10, width=80)
+        
+#         self.create_grid()
+
+#     def create_grid(self):
+#         for widget in self.screen.winfo_children():
+#             if isinstance(widget, Frame) and widget != self.frame:
+#                 widget.destroy()
+
+#         main_frame = Frame(self.screen)
+#         main_frame.pack(expand=True)
+
+#         grid_frame = Frame(main_frame)
+#         grid_frame.pack()
+
+#         for i in range(self.width):
+#             for j in range(self.height):
+#                 button = Button(grid_frame, width=2, height=1)
+#                 button.grid(row=i, column=j)
+
+#     def grid_up(self):
+#         if self.height and self.width < 22 :
+#             self.width += 4
+#             self.height += 4 
+#             self.create_grid()
+#     def grid_down(self):
+#         if self.height and self.width > 10 :
+#             self.width -= 4
+#             self.height -= 4 
+#             self.create_grid()
+
+#     def run(self):
+#         self.screen.mainloop()
+
+
+# if __name__ == "__main__":
+#     game = Minesweeper()
+#     game.run()
 import tkinter as tk
 from tkinter import Tk, Button, Frame
 
@@ -61,19 +122,32 @@ class Minesweeper:
         self.width = 6
         self.height = 6
 
-        self.create_grid()
-
-        self.frame = Frame(self.screen, height=80)        
+        self.frame = Frame(self.screen, height=90)
         self.frame.pack(pady=10, fill="x")
 
         self.difficulty_buttondwn = Button(self.frame, text=" difficulty - ", command=self.grid_down)
-        self.difficulty_buttondwn.place(x=180, y=30, width=80)
-
         self.play_button = Button(self.frame, text=" rejouer 😃", command=self.create_grid)
-        self.play_button.place(x=280, y=30, width=100)
-
         self.difficulty_buttonup = Button(self.frame, text=" difficulty + ", command=self.grid_up)
-        self.difficulty_buttonup.place(x=400, y=30, width=80)
+
+        self.centrer_boutons()
+
+        self.create_grid()
+
+        self.screen.bind("<Configure>", self.on_resize)
+
+    def centrer_boutons(self):
+        largeur_fenetre = self.screen.winfo_width()
+        if largeur_fenetre < 100:
+            largeur_fenetre = 800
+
+        centre = largeur_fenetre // 2
+
+        self.difficulty_buttondwn.place(x=centre - 210, y=25, width=100)
+        self.play_button.place(x=centre - 90, y=25, width=120)
+        self.difficulty_buttonup.place(x=centre + 50, y=25, width=100)
+
+    def on_resize(self, event):
+        self.centrer_boutons()
 
     def create_grid(self):
         for widget in self.screen.winfo_children():
@@ -92,14 +166,15 @@ class Minesweeper:
                 button.grid(row=i, column=j)
 
     def grid_up(self):
-        if self.height and self.width < 22 :
+        if self.width < 22:
             self.width += 4
-            self.height += 4 
+            self.height += 4
             self.create_grid()
+
     def grid_down(self):
-        if self.height and self.width > 10 :
+        if self.width > 10:
             self.width -= 4
-            self.height -= 4 
+            self.height -= 4
             self.create_grid()
 
     def run(self):
