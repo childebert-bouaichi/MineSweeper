@@ -190,3 +190,4 @@ class Minesweeper:
 
     def run(self):
         self.screen.mainloop()
+

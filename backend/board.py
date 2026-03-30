@@ -1,50 +1,46 @@
+
 import random
-from typing import List, Tuple
 from backend.cell import Cell
 
 
 class Board:
-    def __init__(self, rows: int, cols: int, mine_count: int) -> None:
+    def __init__(self, rows, cols, mine_count):
         self.rows = rows
         self.cols = cols
         self.mine_count = mine_count
         self.first_click = True
-        self.grid: List[List[Cell]] = [
+        
+        self.grid = [
             [Cell(r, c) for c in range(cols)] for r in range(rows)
         ]
 
-    def in_bounds(self, row: int, col: int) -> bool:
+    def in_bounds(self, row, col):
         return 0 <= row < self.rows and 0 <= col < self.cols
 
-    def neighbors(self, row: int, col: int) -> List[Tuple[int, int]]:
+    def neighbors(self, row, col):
         result = []
-
         for dr in (-1, 0, 1):
             for dc in (-1, 0, 1):
                 if dr == 0 and dc == 0:
                     continue
-
                 nr = row + dr
                 nc = col + dc
-
                 if self.in_bounds(nr, nc):
                     result.append((nr, nc))
-
         return result
 
-    def place_mines(self, safe_row: int, safe_col: int) -> None:
+    def place_mines(self, safe_row, safe_col):
         forbidden = {(safe_row, safe_col)}
         forbidden.update(self.neighbors(safe_row, safe_col))
 
         candidates = [
-            (r, c)
-            for r in range(self.rows)
+            (r, c) for r in range(self.rows)
             for c in range(self.cols)
             if (r, c) not in forbidden
         ]
 
         if len(candidates) < self.mine_count:
-            raise ValueError("Trop de mines pour cette grille.")
+            raise ValueError("Too many mines for this grid.")
 
         for r, c in random.sample(candidates, self.mine_count):
             self.grid[r][c].is_mine = True
@@ -52,7 +48,7 @@ class Board:
         self.calculate_adjacent_mines()
         self.first_click = False
 
-    def calculate_adjacent_mines(self) -> None:
+    def calculate_adjacent_mines(self):
         for r in range(self.rows):
             for c in range(self.cols):
                 cell = self.grid[r][c]
@@ -68,7 +64,7 @@ class Board:
 
                 cell.adjacent_mines = count
 
-    def reveal_cell(self, row: int, col: int) -> bool:
+    def reveal_cell(self, row, col):
         if not self.in_bounds(row, col):
             return True
 
@@ -92,7 +88,7 @@ class Board:
 
         return True
 
-    def flood_fill(self, row: int, col: int) -> None:
+    def flood_fill(self, row, col):
         for nr, nc in self.neighbors(row, col):
             neighbor = self.grid[nr][nc]
 
@@ -109,40 +105,38 @@ class Board:
             if neighbor.adjacent_mines == 0:
                 self.flood_fill(nr, nc)
 
-    def toggle_mark(self, row: int, col: int) -> None:
+    def toggle_mark(self, row, col):
         if self.in_bounds(row, col):
             self.grid[row][col].toggle_mark()
 
-    def reveal_all_mines(self) -> None:
+    def reveal_all_mines(self):
         for row in self.grid:
             for cell in row:
                 if cell.is_mine:
                     cell.is_revealed = True
 
-    def is_win(self) -> bool:
+    def is_win(self):
         for row in self.grid:
             for cell in row:
                 if not cell.is_mine and not cell.is_revealed:
                     return False
         return True
 
-    def count_flags(self) -> int:
+    def count_flags(self):
         return sum(
-            1
-            for row in self.grid
+            1 for row in self.grid
             for cell in row
             if cell.mark_state == "F"
         )
 
-    def mines_left_estimate(self) -> int:
+    def mines_left_estimate(self):
         return self.mine_count - self.count_flags()
 
-    def get_visible_board(self, reveal_all: bool = False) -> List[List[str]]:
-        visible_grid: List[List[str]] = []
+    def get_visible_board(self, reveal_all=False):
+        visible_grid = []
 
         for row in self.grid:
-            visible_row: List[str] = []
-
+            visible_row = []
             for cell in row:
                 if reveal_all or cell.is_revealed:
                     if cell.is_mine:
@@ -158,7 +152,6 @@ class Board:
                         visible_row.append("?")
                     else:
                         visible_row.append(".")
-
             visible_grid.append(visible_row)
 
         return visible_grid
